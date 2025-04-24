@@ -30,21 +30,26 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ isOpen, onClose }) => {
   return (
     <div 
       ref={dropdownRef}
-      className="absolute right-4 top-20 bg-light rounded-xl shadow-xl z-10 w-48 overflow-hidden"
+      className="absolute right-4 top-20 bg-light/90 dark:bg-secondary/90 rounded-xl shadow-xl z-10 w-52 overflow-hidden glass-effect slide-up"
     >
       <div className="py-2">
-        <a href="#" className="block px-4 py-2 hover:bg-primary/30 transition">
-          <i className="fas fa-book-open mr-2"></i> Conversation History
+        <a href="#" className="block px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center">
+          <i className="fas fa-book-open mr-3 text-primary dark:text-primary/90"></i> Conversation History
         </a>
-        <a href="#" className="block px-4 py-2 hover:bg-primary/30 transition">
-          <i className="fas fa-heart mr-2"></i> Relationship Milestones
+        <a href="#" className="block px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center">
+          <i className="fas fa-heart mr-3 text-accent dark:text-accent/90"></i> Relationship Milestones
         </a>
-        <a href="#" className="block px-4 py-2 hover:bg-primary/30 transition">
-          <i className="fas fa-cog mr-2"></i> Settings
+        <a href="#" className="block px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center">
+          <i className="fas fa-cog mr-3 text-primary dark:text-primary/90"></i> Settings
         </a>
-        <a href="#" className="block px-4 py-2 hover:bg-primary/30 transition">
-          <i className="fas fa-question-circle mr-2"></i> Help
+        <a href="#" className="block px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center">
+          <i className="fas fa-question-circle mr-3 text-primary dark:text-primary/90"></i> Help
         </a>
+        <div className="border-t border-secondary/30 dark:border-primary/20 mt-1 pt-1">
+          <a href="#" className="block px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center">
+            <i className="fas fa-moon mr-3 text-primary dark:text-primary/90"></i> Toggle Theme
+          </a>
+        </div>
       </div>
     </div>
   );

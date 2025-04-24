@@ -37,9 +37,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping }) => {
           
           if (message.sender === "luna") {
             return (
-              <div key={message.id} className="flex items-end mb-4">
+              <div key={message.id} className="flex items-end mb-4 fade-in">
                 <div className="relative flex-shrink-0 mr-2">
-                  <div className="w-8 h-8 rounded-full bg-light border-2 border-accent overflow-hidden">
+                  <div className="w-9 h-9 rounded-full bg-light dark:bg-secondary border-2 border-accent overflow-hidden shadow-md">
                     <img 
                       src="https://images.unsplash.com/photo-1578632767115-351597cf2477?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
                       alt="Luna small" 
@@ -48,10 +48,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping }) => {
                   </div>
                 </div>
                 <div className="max-w-[80%]">
-                  <div className="chat-bubble-luna bg-secondary p-3 shadow-md">
-                    <p>{message.content}</p>
+                  <div className="chat-bubble-luna bg-secondary dark:bg-primary/20 p-3 shadow-md">
+                    <p className="leading-relaxed whitespace-pre-wrap">{message.content}</p>
                   </div>
-                  <div className="text-xs text-dark/50 mt-1 ml-2">
+                  <div className="text-xs text-dark/50 dark:text-light/50 mt-1 ml-2">
                     {formattedTime}
                   </div>
                 </div>
@@ -59,15 +59,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping }) => {
             );
           } else {
             return (
-              <div key={message.id} className="flex flex-row-reverse items-end mb-4">
-                <div className="w-8 h-8 rounded-full bg-accent ml-2 flex items-center justify-center text-light font-bold overflow-hidden">
+              <div key={message.id} className="flex flex-row-reverse items-end mb-4 fade-in">
+                <div className="w-9 h-9 rounded-full bg-accent dark:bg-accent/90 ml-2 flex items-center justify-center text-light font-bold overflow-hidden shadow-md">
                   <span>ME</span>
                 </div>
                 <div className="max-w-[80%]">
-                  <div className="chat-bubble-user bg-accent p-3 text-light shadow-md">
-                    <p>{message.content}</p>
+                  <div className="chat-bubble-user bg-accent dark:bg-accent/90 p-3 text-light shadow-md">
+                    <p className="leading-relaxed whitespace-pre-wrap">{message.content}</p>
                   </div>
-                  <div className="text-xs text-dark/50 mt-1 mr-2 text-right">
+                  <div className="text-xs text-dark/50 dark:text-light/50 mt-1 mr-2 text-right">
                     {formattedTime}
                   </div>
                 </div>
@@ -81,9 +81,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping }) => {
         
         {/* Luna typing indicator */}
         {isTyping && (
-          <div className="flex items-end mb-4">
+          <div className="flex items-end mb-4 fade-in">
             <div className="relative flex-shrink-0 mr-2">
-              <div className="w-8 h-8 rounded-full bg-light border-2 border-accent overflow-hidden">
+              <div className="w-9 h-9 rounded-full bg-light dark:bg-secondary border-2 border-accent overflow-hidden shadow-md">
                 <img 
                   src="https://images.unsplash.com/photo-1578632767115-351597cf2477?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
                   alt="Luna small" 
@@ -92,7 +92,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping }) => {
               </div>
             </div>
             <div className="max-w-[80%]">
-              <div className="chat-bubble-luna bg-secondary p-3 shadow-md">
+              <div className="chat-bubble-luna bg-secondary dark:bg-primary/20 p-3 shadow-md">
                 <p className="loading-dots">Luna is typing</p>
               </div>
             </div>
