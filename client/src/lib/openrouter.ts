@@ -1,6 +1,8 @@
 import { Message } from './types';
 
 // Function to send a message to the AI via the backend proxy
+const TIMEOUT_MS = 30000; // 30 second timeout
+
 export async function sendMessageToLuna(
   prompt: string,
   conversationHistory: Message[],

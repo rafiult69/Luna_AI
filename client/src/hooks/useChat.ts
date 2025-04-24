@@ -69,12 +69,23 @@ export function useChat() {
       // Show typing indicator
       setIsTyping(true);
       
-      // Get response from Luna via the OpenRouter API
-      const response = await sendMessageToLuna(
-        content,
-        messages.concat(userMessage),
-        mood
-      );
+      // Get response from Luna via the OpenRouter API with retry logic
+      let response;
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          response = await sendMessageToLuna(
+            content,
+            messages.concat(userMessage),
+            mood
+          );
+          break;
+        } catch (retryError) {
+          retries--;
+          if (retries === 0) throw retryError;
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
       
       // Split Luna's response into multiple chunks
       const chunks = chunkResponse(response);
