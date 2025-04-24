@@ -96,11 +96,28 @@ export function useChat() {
         setMessages(prev => [...prev, lunaMessage]);
       }
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending message:', error);
+      
+      // Use a friendly error message that matches Luna's character
+      const errorMessage = error.message?.includes("error") 
+        ? "Hmph! (￣ヘ￣) My connection seems unstable. It's not like I wanted to talk anyway... Maybe try again later?"
+        : "Failed to get a response from Luna. Please try again.";
+      
+      // Create a Luna message with the error
+      const errorLunaMessage: Message = {
+        id: nanoid(),
+        sender: 'luna',
+        content: errorMessage,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Add Luna's error message to the chat
+      setMessages(prev => [...prev, errorLunaMessage]);
+      
       toast({
-        title: "Error",
-        description: "Failed to get a response from Luna. Please try again.",
+        title: "Connection Issue",
+        description: "Luna seems to be unavailable right now. Try again in a moment.",
         variant: "destructive",
       });
     } finally {

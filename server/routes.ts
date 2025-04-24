@@ -317,25 +317,85 @@ Current mood: ${mood || "neutral"}
 
       // Use try-catch inside to handle different potential error scenarios
       try {
-        const completion = await client.chat.completions.create({
-          model: "mistralai/mistral-small-3.1-24b-instruct:free",
-          messages: typedMessages,
-          temperature: 0.85, // Slightly higher temperature for more varied responses
-          max_tokens: 250, // Shorter responses to ensure multiple messages
-        });
-
-        if (completion && completion.choices && completion.choices[0] && completion.choices[0].message) {
-          return res.json({
-            message: completion.choices[0].message.content,
-            usage: completion.usage
+        // Let's try a different free model since we hit rate limits
+        const modelOptions = [
+          "mistralai/mistral-small-3.1-24b-instruct:free",
+          "google/gemma-7b-it:free", 
+          "anthropic/claude-instant-1.2:free"
+        ];
+        
+        // Try the first model
+        try {
+          const completion = await client.chat.completions.create({
+            model: modelOptions[0],
+            messages: typedMessages,
+            temperature: 0.85, // Slightly higher temperature for more varied responses
+            max_tokens: 250, // Shorter responses to ensure multiple messages
           });
-        } else {
-          console.error("Invalid response format from API:", completion);
-          return res.status(500).json({ message: "Invalid response format from AI" });
+
+          if (completion && completion.choices && completion.choices[0] && completion.choices[0].message) {
+            return res.json({
+              message: completion.choices[0].message.content,
+              usage: completion.usage
+            });
+          }
+        } catch (firstModelError: any) {
+          console.log("First model failed, trying alternative model...");
+          // If we get a rate limit error, try the second model
+          if (firstModelError?.error?.code === 429) {
+            try {
+              // Try with second model option
+              const completion = await client.chat.completions.create({
+                model: modelOptions[1],
+                messages: typedMessages,
+                temperature: 0.85,
+                max_tokens: 250,
+              });
+              
+              if (completion && completion.choices && completion.choices[0] && completion.choices[0].message) {
+                return res.json({
+                  message: completion.choices[0].message.content,
+                  usage: completion.usage
+                });
+              }
+            } catch (secondModelError) {
+              // If second model also fails, try the third model
+              try {
+                const completion = await client.chat.completions.create({
+                  model: modelOptions[2],
+                  messages: typedMessages,
+                  temperature: 0.85,
+                  max_tokens: 250,
+                });
+                
+                if (completion && completion.choices && completion.choices[0] && completion.choices[0].message) {
+                  return res.json({
+                    message: completion.choices[0].message.content,
+                    usage: completion.usage
+                  });
+                }
+              } catch (thirdModelError) {
+                // All models failed
+                console.error("All OpenRouter models failed:", thirdModelError);
+              }
+            }
+          }
         }
+        
+        // Fallback response if all API calls fail
+        const fallbackResponse = `Hmph! (￣ヘ￣) My internet connection seems to be down right now. Don't get the wrong idea - I'll talk to you when it's back up. It's not like I miss our conversations or anything...`;
+        
+        return res.json({
+          message: fallbackResponse,
+          usage: null
+        });
+        
       } catch (apiError) {
         console.error("API error details:", apiError);
-        return res.status(500).json({ message: "Error calling AI API" });
+        return res.status(500).json({ 
+          message: "Luna is having connection issues. Try again in a moment!", 
+          error: true 
+        });
       }
     } catch (error) {
       console.error("Error in chat API:", error);
