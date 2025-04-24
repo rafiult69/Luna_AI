@@ -314,18 +314,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       ];
 
       const completion = await client.chat.completions.create({
-        model: "mistralai/mistral-small-3.1-24b-instruct:free",
+        model: "mistralai/mistral-7b-instruct-4k",
         messages: messages,
         temperature: 0.7,
         max_tokens: 500,
-        extra_headers: {
-          "HTTP-Referer": "<YOUR_SITE_URL>",
-          "X-Title": "Luna AI Girlfriend"
-        }
       });
 
+      if (!completion.choices || completion.choices.length === 0) {
+        throw new Error("No response from AI");
+      }
+
       return res.json({
-        message: completion.choices[0].message.content,
+        message: completion.choices[0].message.content || "I couldn't generate a response. Please try again.",
         usage: completion.usage
       });
     } catch (error) {
