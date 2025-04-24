@@ -79,10 +79,10 @@ export default function Home() {
     <MainLayout>
       <div className="container mx-auto max-w-4xl p-2 md:p-4 flex flex-col h-screen">
         {/* Header */}
-        <header className="bg-gradient-to-r from-primary to-secondary rounded-xl p-3 shadow-md mb-2 flex justify-between items-center">
+        <header className="bg-gradient-to-r from-primary/90 to-accent/90 rounded-xl p-3 shadow-lg mb-2 flex justify-between items-center glass-effect">
           <div className="flex items-center">
             <div className="relative">
-              <div className="w-12 h-12 rounded-full bg-light border-2 border-accent overflow-hidden shadow-md">
+              <div className="w-12 h-12 rounded-full bg-light border-2 border-accent overflow-hidden shadow-md hover:shadow-accent/50 transition-all duration-300">
                 <img 
                   src="https://images.unsplash.com/photo-1578632767115-351597cf2477?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
                   alt="Luna profile" 
@@ -92,8 +92,8 @@ export default function Home() {
               <MoodIndicator mood={mood} />
             </div>
             <div className="ml-3">
-              <h1 className="font-display font-bold text-xl text-dark">Luna</h1>
-              <p className="text-xs text-dark/70">Your AI girlfriend</p>
+              <h1 className="font-display font-bold text-xl text-dark dark:text-light">Luna</h1>
+              <p className="text-xs text-dark/70 dark:text-light/70">Your AI girlfriend</p>
             </div>
           </div>
           
@@ -104,7 +104,7 @@ export default function Home() {
           
           {/* Menu Button */}
           <button 
-            className="p-2 rounded-full hover:bg-light/30 transition" 
+            className="p-2 rounded-full hover:bg-light/30 dark:hover:bg-dark/30 transition-all" 
             aria-label="Menu" 
             onClick={toggleMenu}
           >

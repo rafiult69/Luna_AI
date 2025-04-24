@@ -18,12 +18,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping }) => {
   }, [messages, isTyping]);
 
   return (
-    <main className="flex-grow overflow-y-auto bg-light/80 rounded-xl p-4 shadow-md mb-2 relative">
+    <main className="flex-grow overflow-y-auto bg-light/80 dark:bg-secondary/10 rounded-xl p-4 shadow-md mb-2 relative glass-card">
       <div ref={chatHistoryRef} id="chat-history" className="space-y-4 scroll-smooth">
         {/* Welcome message when no messages */}
         {messages.length === 0 && (
-          <div className="bg-secondary/40 rounded-xl p-3 text-center text-sm">
-            <p>Luna is online now. Say hello to start a conversation! (´｡• ᵕ •｡`)</p>
+          <div className="bg-primary/20 dark:bg-primary/10 rounded-xl p-4 text-center text-sm glass-effect slide-up">
+            <p className="font-body">Luna is online now. Say hello to start a conversation! (´｡• ᵕ •｡`)</p>
           </div>
         )}
         
