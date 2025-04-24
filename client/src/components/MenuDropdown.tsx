@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTheme } from '@/components/ui/theme-provider';
 
 interface MenuDropdownProps {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface MenuDropdownProps {
 
 const MenuDropdown: React.FC<MenuDropdownProps> = ({ isOpen, onClose }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme } = useTheme();
 
   // Close on click outside
   useEffect(() => {
@@ -47,11 +49,12 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ isOpen, onClose }) => {
         </a>
         <div className="border-t border-secondary/30 dark:border-primary/20 mt-1 pt-1">
           <button 
-  onClick={() => document.documentElement.classList.toggle('dark')}
-  className="w-full text-left px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center"
->
-  <i className="fas fa-moon mr-3 text-primary dark:text-primary/90"></i> Toggle Theme
-</button>
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="w-full text-left px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center"
+          >
+            <i className={`${theme === "dark" ? "fas fa-sun" : "fas fa-moon"} mr-3 text-primary dark:text-primary/90`}></i> 
+            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </button>
         </div>
       </div>
     </div>

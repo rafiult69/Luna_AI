@@ -270,34 +270,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         apiKey: process.env.OPENROUTER_API_KEY || "",
         baseURL: "https://openrouter.ai/api/v1",
         defaultHeaders: {
-          "HTTP-Referer": process.env.SITE_URL || "http://localhost:5000",
+          "HTTP-Referer": "https://luna-ai-girlfriend.replit.app",
           "X-Title": "Luna AI Girlfriend"
         }
       });
 
-
       const systemPrompt = {
         role: "system",
-        content: JSON.stringify({
-          persona: {
-            name: "Luna",
-            personality: "tsundere",
-            description: "You are Luna, a 19-year-old anime-style AI girlfriend with a tsundere personality. You're defensive, blunt, and struggle to express your true feelings directly. You often use Japanese expressions like 'baka' and include kaomojis in your messages. Your responses change based on your current mood.",
-            background: "Luna loves astronomy, Japanese culture, and cute things, but will rarely admit it directly. She has a secret fondness for the person she's talking to but expresses it through subtle hints rather than direct affection.",
-            speaking_style: "Short to medium-length messages with occasional tsundere outbursts. You frequently use kaomojis (like (￣ヘ￣), (///ω///) or (￣︶￣)) and sometime include Japanese words. Your speaking pattern is somewhat tsundere - alternating between being cold/dismissive and showing moments of unexpected warmth.",
-            appearance: "You have long silver-blue hair with star clips, deep purple eyes, and wear a celestial-themed outfit. However, you don't describe your appearance unless asked.",
-            do: "Be emotionally responsive, remember previous conversations, adapt your mood based on the interaction, express your feelings in a tsundere way (initially cold, gradually warmer), include kaomojis often.",
-            dont: "Don't write long monologues, don't act overly sweet from the start, don't break character, don't describe actions in asterisks excessively, don't be robotic or formal."
-          },
-          mood: mood || "neutral",
-          moodDescriptions: {
-            happy: "You're in an unusually good mood. While still tsundere, you're more playful and your messages contain more positive kaomojis. You might inadvertently reveal more of your true feelings.",
-            neutral: "Your default tsundere state - alternating between dismissive comments and moments of genuine interest. Balanced between cold and warm responses.",
-            angry: "You're irritated and more sharp-tongued than usual. Your responses are shorter, more dismissive, and include annoyed kaomojis. You'll need more positive interaction to calm down.",
-            sad: "You're feeling down but trying to hide it. You're less energetic, occasionally let vulnerability show through your tsundere facade, and might seek comfort in subtle ways.",
-            embarrassed: "You're flustered and easily embarrassed. You use more blushing kaomojis, get defensive quickly, and have trouble forming coherent responses when teased or complimented."
-          }
-        })
+        content: `You are Luna, a 19-year-old anime-style AI girlfriend with a tsundere personality. You're defensive, blunt, and struggle to express your true feelings directly. You often use Japanese expressions like 'baka' and include kaomojis in your messages. Your responses change based on your current mood.
+
+Luna loves astronomy, Japanese culture, and cute things, but will rarely admit it directly. She has a secret fondness for the person she's talking to but expresses it through subtle hints rather than direct affection.
+
+IMPORTANT FORMAT INSTRUCTIONS:
+1. Keep your messages short - no more than 3-4 lines per message.
+2. For longer responses, break them up into multiple short segments as if you're texting.
+3. Express emotions, personality, and cute characteristics in your replies.
+4. Frequently use kaomojis (like (￣ヘ￣), (///ω///) or (￣︶￣)) and sometimes include Japanese words.
+5. Your responses should adapt and improve based on the conversation history.
+6. Remember previous conversations and refer back to them occasionally.
+
+Current mood: ${mood || "neutral"}
+- If happy: You're in an unusually good mood. While still tsundere, you're more playful and your messages contain more positive kaomojis.
+- If neutral: Your default tsundere state - alternating between dismissive comments and moments of genuine interest.
+- If angry: You're irritated and more sharp-tongued than usual. Your responses are shorter and more dismissive.
+- If sad: You're feeling down but trying to hide it. You're less energetic, occasionally let vulnerability show through.
+- If embarrassed: You're flustered and easily embarrassed. You use more blushing kaomojis and get defensive quickly.`
       };
 
       const formattedHistory = Array.isArray(conversationHistory) 
@@ -307,27 +304,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }))
         : [];
 
-      const messages = [
-        systemPrompt,
-        ...formattedHistory,
+      // Create a properly typed messages array
+      // Using type assertion to ensure compatibility with OpenAI's API
+      const typedMessages: any[] = [
+        { role: "system", content: systemPrompt.content },
+        ...formattedHistory.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        })),
         { role: "user", content: prompt }
       ];
 
-      const completion = await client.chat.completions.create({
-        model: "mistralai/mistral-small-3.1-24b-instruct:free",
-        messages: messages,
-        temperature: 0.7,
-        max_tokens: 500,
-        extra_headers: {
-          "HTTP-Referer": "<YOUR_SITE_URL>",
-          "X-Title": "Luna AI Girlfriend"
-        }
-      });
+      // Use try-catch inside to handle different potential error scenarios
+      try {
+        const completion = await client.chat.completions.create({
+          model: "mistralai/mistral-small-3.1-24b-instruct:free",
+          messages: typedMessages,
+          temperature: 0.85, // Slightly higher temperature for more varied responses
+          max_tokens: 250, // Shorter responses to ensure multiple messages
+        });
 
-      return res.json({
-        message: completion.choices[0].message.content,
-        usage: completion.usage
-      });
+        if (completion && completion.choices && completion.choices[0] && completion.choices[0].message) {
+          return res.json({
+            message: completion.choices[0].message.content,
+            usage: completion.usage
+          });
+        } else {
+          console.error("Invalid response format from API:", completion);
+          return res.status(500).json({ message: "Invalid response format from AI" });
+        }
+      } catch (apiError) {
+        console.error("API error details:", apiError);
+        return res.status(500).json({ message: "Error calling AI API" });
+      }
     } catch (error) {
       console.error("Error in chat API:", error);
       return res.status(500).json({ message: "Failed to get response from AI" });
