@@ -314,10 +314,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       ];
 
       const completion = await client.chat.completions.create({
-        model: "mistralai/mistral-7b-instruct-4k",
+        model: "anthropic/claude-instant-v1",
         messages: messages,
         temperature: 0.7,
         max_tokens: 500,
+        extra_headers: {
+          "HTTP-Referer": process.env.SITE_URL || "http://localhost:5000",
+          "X-Title": "Luna AI Girlfriend"
+        }
       });
 
       if (!completion.choices || completion.choices.length === 0) {
