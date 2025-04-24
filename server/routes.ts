@@ -10,6 +10,7 @@ import {
 } from "@shared/schema";
 import { z } from "zod";
 import { nanoid } from "nanoid";
+import OpenAI from "openai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // User routes
@@ -17,11 +18,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userData = insertUserSchema.parse(req.body);
       const existingUser = await storage.getUserByUsername(userData.username);
-      
+
       if (existingUser) {
         return res.status(409).json({ message: "Username already exists" });
       }
-      
+
       const user = await storage.createUser(userData);
       return res.status(201).json({ id: user.id, username: user.username });
     } catch (error) {
@@ -31,23 +32,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to create user" });
     }
   });
-  
+
   // Conversation routes
   app.post("/api/conversations", async (req: Request, res: Response) => {
     try {
       const conversationData = insertConversationSchema.parse(req.body);
       const user = await storage.getUser(conversationData.userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       const existingConversation = await storage.getConversationByUserId(user.id);
-      
+
       if (existingConversation) {
         return res.status(409).json({ message: "Conversation already exists for this user" });
       }
-      
+
       const conversation = await storage.createConversation(conversationData);
       return res.status(201).json(conversation);
     } catch (error) {
@@ -57,74 +58,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to create conversation" });
     }
   });
-  
+
   app.get("/api/conversations/:id", async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid conversation ID" });
       }
-      
+
       const conversation = await storage.getConversation(id);
-      
+
       if (!conversation) {
         return res.status(404).json({ message: "Conversation not found" });
       }
-      
+
       return res.json(conversation);
     } catch (error) {
       return res.status(500).json({ message: "Failed to retrieve conversation" });
     }
   });
-  
+
   app.get("/api/users/:userId/conversation", async (req: Request, res: Response) => {
     try {
       const userId = Number(req.params.userId);
-      
+
       if (isNaN(userId)) {
         return res.status(400).json({ message: "Invalid user ID" });
       }
-      
+
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       const conversation = await storage.getConversationByUserId(userId);
-      
+
       if (!conversation) {
         return res.status(404).json({ message: "Conversation not found for this user" });
       }
-      
+
       return res.json(conversation);
     } catch (error) {
       return res.status(500).json({ message: "Failed to retrieve conversation" });
     }
   });
-  
+
   // Message routes
   app.post("/api/conversations/:id/messages", async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid conversation ID" });
       }
-      
+
       const conversation = await storage.getConversation(id);
-      
+
       if (!conversation) {
         return res.status(404).json({ message: "Conversation not found" });
       }
-      
+
       const messageData = messageSchema.parse({
         ...req.body,
         id: nanoid(),
         timestamp: new Date().toISOString()
       });
-      
+
       const updatedConversation = await storage.addMessage(id, messageData);
       return res.status(201).json(updatedConversation);
     } catch (error) {
@@ -134,84 +135,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to add message" });
     }
   });
-  
+
   // Mood routes
   app.patch("/api/conversations/:id/mood", async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid conversation ID" });
       }
-      
+
       const { mood } = req.body;
-      
+
       if (!mood || typeof mood !== "string") {
         return res.status(400).json({ message: "Invalid mood data" });
       }
-      
+
       const conversation = await storage.getConversation(id);
-      
+
       if (!conversation) {
         return res.status(404).json({ message: "Conversation not found" });
       }
-      
+
       const updatedConversation = await storage.updateMood(id, mood);
       return res.json(updatedConversation);
     } catch (error) {
       return res.status(500).json({ message: "Failed to update mood" });
     }
   });
-  
+
   // Affection routes
   app.patch("/api/conversations/:id/affection", async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid conversation ID" });
       }
-      
+
       const { affection } = req.body;
-      
+
       if (affection === undefined || typeof affection !== "number") {
         return res.status(400).json({ message: "Invalid affection data" });
       }
-      
+
       const conversation = await storage.getConversation(id);
-      
+
       if (!conversation) {
         return res.status(404).json({ message: "Conversation not found" });
       }
-      
+
       const updatedConversation = await storage.updateAffection(id, affection);
       return res.json(updatedConversation);
     } catch (error) {
       return res.status(500).json({ message: "Failed to update affection" });
     }
   });
-  
+
   // Milestone routes
   app.post("/api/conversations/:id/milestones", async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid conversation ID" });
       }
-      
+
       const conversation = await storage.getConversation(id);
-      
+
       if (!conversation) {
         return res.status(404).json({ message: "Conversation not found" });
       }
-      
+
       const milestoneData = milestoneSchema.parse({
         ...req.body,
         id: nanoid(),
         timestamp: new Date().toISOString()
       });
-      
+
       const updatedConversation = await storage.addMilestone(id, milestoneData);
       return res.status(201).json(updatedConversation);
     } catch (error) {
@@ -221,57 +222,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to add milestone" });
     }
   });
-  
+
   app.patch("/api/conversations/:id/milestones/:milestoneId", async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
       const milestoneId = req.params.milestoneId;
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid conversation ID" });
       }
-      
+
       const { achieved } = req.body;
-      
+
       if (achieved === undefined || typeof achieved !== "boolean") {
         return res.status(400).json({ message: "Invalid milestone update data" });
       }
-      
+
       const conversation = await storage.getConversation(id);
-      
+
       if (!conversation) {
         return res.status(404).json({ message: "Conversation not found" });
       }
-      
+
       const milestone = conversation.milestones.find(m => m.id === milestoneId);
-      
+
       if (!milestone) {
         return res.status(404).json({ message: "Milestone not found" });
       }
-      
+
       const updatedConversation = await storage.updateMilestone(id, milestoneId, achieved);
       return res.json(updatedConversation);
     } catch (error) {
       return res.status(500).json({ message: "Failed to update milestone" });
     }
   });
-  
-  // OpenRouter proxy endpoint to keep API key on server
+
+  // OpenRouter proxy endpoint using OpenAI client
   app.post("/api/chat", async (req: Request, res: Response) => {
     try {
       const { prompt, conversationHistory, mood } = req.body;
-      
+
       if (!prompt || typeof prompt !== 'string') {
         return res.status(400).json({ message: "Invalid prompt" });
       }
-      
-      const API_KEY = process.env.OPENROUTER_API_KEY;
-      
-      if (!API_KEY) {
-        return res.status(500).json({ message: "OpenRouter API key not configured" });
-      }
-      
-      // Create system prompt with Luna's personality and current mood
+
+      const client = new OpenAI({
+        apiKey: "<OPENROUTER_API_KEY>",
+        base_url: "https://openrouter.ai/api/v1",
+      });
+
+
       const systemPrompt = {
         role: "system",
         content: JSON.stringify({
@@ -295,53 +295,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         })
       };
-      
-      // Format conversation history
+
       const formattedHistory = Array.isArray(conversationHistory) 
         ? conversationHistory.map(msg => ({
             role: msg.sender === "user" ? "user" : "assistant",
             content: msg.content
           }))
         : [];
-      
-      // Create complete message array for the API request
+
       const messages = [
         systemPrompt,
         ...formattedHistory,
         { role: "user", content: prompt }
       ];
-      
-      // Make request to OpenRouter API
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${API_KEY}`,
-          "HTTP-Referer": process.env.REPLIT_DOMAINS?.split(",")[0] || "http://localhost:5000", 
+
+      const completion = await client.chat.completions.create({
+        model: "mistralai/mistral-small-3.1-24b-instruct:free",
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 500,
+        extra_headers: {
+          "HTTP-Referer": "<YOUR_SITE_URL>",
           "X-Title": "Luna AI Girlfriend"
-        },
-        body: JSON.stringify({
-          model: "mistralai/mistral-7b-instruct",
-          messages,
-          temperature: 0.7,
-          max_tokens: 500
-        })
+        }
       });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("OpenRouter API error:", errorText);
-        return res.status(response.status).json({ 
-          message: "Error from OpenRouter API", 
-          details: errorText 
-        });
-      }
-      
-      const responseData = await response.json();
-      
+
       return res.json({
-        message: responseData.choices[0].message.content,
-        usage: responseData.usage
+        message: completion.choices[0].message.content,
+        usage: completion.usage
       });
     } catch (error) {
       console.error("Error in chat API:", error);
