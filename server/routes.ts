@@ -267,8 +267,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const client = new OpenAI({
-        apiKey: "<OPENROUTER_API_KEY>",
-        base_url: "https://openrouter.ai/api/v1",
+        apiKey: process.env.OPENROUTER_API_KEY || "",
+        baseURL: "https://openrouter.ai/api/v1",
+        defaultHeaders: {
+          "HTTP-Referer": process.env.SITE_URL || "http://localhost:5000",
+          "X-Title": "Luna AI Girlfriend"
+        }
       });
 
 
