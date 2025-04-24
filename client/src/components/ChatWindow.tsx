@@ -19,7 +19,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping }) => {
 
   return (
     <main className="flex-grow overflow-y-auto bg-light/80 rounded-xl p-4 shadow-md mb-2 relative">
-      <div ref={chatHistoryRef} id="chat-history" className="space-y-4">
+      <div ref={chatHistoryRef} id="chat-history" className="space-y-4 scroll-smooth">
         {/* Welcome message when no messages */}
         {messages.length === 0 && (
           <div className="bg-secondary/40 rounded-xl p-3 text-center text-sm">

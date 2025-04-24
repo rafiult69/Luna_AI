@@ -80,7 +80,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             value={message}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            className="w-full px-4 py-2 rounded-xl border border-secondary focus:outline-none focus:ring-2 focus:ring-accent resize-none h-12 max-h-32"
+            className="w-full px-4 py-2 rounded-xl border border-secondary focus:outline-none focus:ring-2 focus:ring-accent resize-none h-12 max-h-32 transition-all duration-200 hover:border-accent/50 backdrop-blur-sm"
             placeholder="Type your message..."
             disabled={disabled}
           />

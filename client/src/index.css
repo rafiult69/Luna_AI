@@ -90,13 +90,15 @@
 }
 
 @layer components {
-  /* Chat bubbles */
+  /* Chat bubbles with smooth animations */
   .chat-bubble-luna {
-    @apply relative rounded-2xl rounded-bl-none;
+    @apply relative rounded-2xl rounded-bl-none transform transition-all duration-200 hover:shadow-lg;
+    backdrop-filter: blur(8px);
   }
 
   .chat-bubble-user {
-    @apply relative rounded-2xl rounded-br-none;
+    @apply relative rounded-2xl rounded-br-none transform transition-all duration-200 hover:shadow-lg;
+    backdrop-filter: blur(8px);
   }
 
   /* Loading dots animation */
