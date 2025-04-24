@@ -38,16 +38,25 @@ export function useChat() {
         mood
       );
       
-      // Create Luna's response message
-      const lunaMessage: Message = {
-        id: nanoid(),
-        sender: 'luna',
-        content: response,
-        timestamp: new Date().toISOString()
-      };
+      // Split long responses into multiple messages
+      const responses = response.split('\n\n').filter(r => r.trim());
       
-      // Add Luna's response to chat
-      setMessages(prev => [...prev, lunaMessage]);
+      // Send each part as a separate message with a small delay
+      for (const responsePart of responses) {
+        const lunaMessage: Message = {
+          id: nanoid(),
+          sender: 'luna',
+          content: responsePart.trim(),
+          timestamp: new Date().toISOString()
+        };
+        
+        setMessages(prev => [...prev, lunaMessage]);
+        
+        // Add small delay between multiple messages
+        if (responses.length > 1) {
+          await new Promise(resolve => setTimeout(resolve, 800));
+        }
+      }
       
     } catch (error) {
       console.error('Error sending message:', error);
