@@ -321,7 +321,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           "X-Title": "Luna AI Girlfriend"
         },
         body: JSON.stringify({
-          model: "mythomax/mythomax-l2-13b-nsfw",
+          model: "mistralai/mistral-7b-instruct",
           messages,
           temperature: 0.7,
           max_tokens: 500
