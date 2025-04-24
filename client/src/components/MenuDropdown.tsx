@@ -46,9 +46,12 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ isOpen, onClose }) => {
           <i className="fas fa-question-circle mr-3 text-primary dark:text-primary/90"></i> Help
         </a>
         <div className="border-t border-secondary/30 dark:border-primary/20 mt-1 pt-1">
-          <a href="#" className="block px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center">
-            <i className="fas fa-moon mr-3 text-primary dark:text-primary/90"></i> Toggle Theme
-          </a>
+          <button 
+  onClick={() => document.documentElement.classList.toggle('dark')}
+  className="w-full text-left px-4 py-3 text-dark dark:text-light hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-200 font-body flex items-center"
+>
+  <i className="fas fa-moon mr-3 text-primary dark:text-primary/90"></i> Toggle Theme
+</button>
         </div>
       </div>
     </div>
