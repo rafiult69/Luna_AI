@@ -1,118 +1,88 @@
 
-# 🌙 Luna AI - Your Enchanting AI Companion
+# 🌙 Luna AI - Your Virtual Companion
 
-Welcome to Luna, a charming AI companion that brings personality and intelligence to your conversations! Luna combines modern AI technology with an engaging character to create meaningful interactions.
+Luna is an engaging virtual companion that combines advanced AI technology with a charming personality. Built with modern web technologies and a focus on natural interactions, Luna offers a unique conversational experience.
 
-## ✨ Features
+## ✨ Key Features
 
-- 🎭 **Dynamic Personality System**
-  - Realistic emotional responses
-  - Memory of past conversations
-  - Unique character development
+- 🎭 **Dynamic Personality**
+  - Emotionally aware responses
+  - Contextual memory
+  - Character development
   - Mood-based interactions
 
-- 💝 **Relationship System**
-  - Progressive bonding mechanics
-  - Affection tracking
-  - Special interaction milestones
-  - Dynamic conversation history
-
-- 🎨 **Modern UI/UX**
+- 💫 **Interactive Experience**
   - Real-time chat interface
-  - Mood indicators
-  - Relationship progress bar
-  - Beautiful animations
+  - Relationship progression
+  - Special interaction milestones
+  - Conversation memory
 
-## 🚀 Quick Start
+- 🎨 **Modern Interface**
+  - Sleek chat design
+  - Live mood indicators
+  - Progress tracking
+  - Smooth animations
 
-1. **Setup Project**
+## 🚀 Getting Started
+
+1. Clone the repository:
    ```bash
-   # Clone the repository on Replit
-   # Install dependencies
+   git clone https://github.com/rafiult69/Luna_AI.git
+   cd Luna_AI
+   ```
+
+2. Install dependencies:
+   ```bash
    npm install
    ```
 
-2. **Configure Environment**
-   - Get an API key from [OpenRouter](https://openrouter.ai)
-   - Add to Replit Secrets:
-     ```
-     Key: OPENROUTER_API_KEY
-     Value: your_api_key_here
-     ```
+3. Set up your environment variables
 
-3. **Start Development**
+4. Start development server:
    ```bash
    npm run dev
    ```
 
-## 💻 Technical Details
+## 💻 Tech Stack
 
-### Stack
-- **Frontend**: React + TypeScript + Tailwind
-- **Backend**: Express.js
-- **AI**: OpenRouter API
-- **Real-time**: WebSocket
-- **UI Components**: Radix UI
-- **Animations**: Framer Motion
+- **Frontend**: React + TypeScript + Tailwind CSS
+- **Backend**: Express.js + WebSocket
+- **UI Components**: Radix UI + Framer Motion
+- **State Management**: React Query
 
-### Project Structure
+## 📁 Project Structure
+
 ```
 /client         # React frontend
 /server         # Express backend
-/shared         # Shared types
+/shared         # Shared types & schemas
 ```
-
-## 🤖 AI Configuration
-
-Luna uses advanced AI with:
-- Dynamic context management
-- Personality preservation
-- Emotional state tracking
-- Memory system
-- Response templating
-
-## 🎮 Usage Guide
-
-### Basic Interaction
-- Start conversations naturally
-- Watch Luna's mood indicator
-- Build relationship gradually
-- Unlock special interactions
-
-### Commands
-- `/help` - Show available commands
-- `/mood` - Check Luna's current mood
-- `/status` - View relationship status
-- `/clear` - Reset conversation
 
 ## 🛠️ Development
 
-### Running Locally
-1. Start the development server:
-   ```bash
-   npm run dev
-   ```
-2. Access at: `http://localhost:5000`
+### Local Development
+```bash
+npm run dev
+```
 
-### Production
+### Production Build
 ```bash
 npm run build
 npm start
 ```
 
-## 📝 Contributing
+## 🤝 Contributing
 
-Feel free to:
+Contributions are welcome! Feel free to:
 - Report bugs
 - Suggest features
-- Submit pull requests
+- Submit PRs
 - Share feedback
 
-## ⚖️ License
+## 📄 License
 
 MIT License - Feel free to use and modify!
 
 ---
 
-Built with 💜 using React, Express, and AI technology
-
+Built with 💜 by [Rafiult69](https://github.com/rafiult69)
